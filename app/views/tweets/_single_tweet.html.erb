@@ -1,0 +1,46 @@
+<div class="card col-12 px-0  my-1 fondo-2">
+    <div class="card text-dark single-t ">
+        <div class="card-header card-color">
+            <div>
+                <%= link_to "<i class='fa fa-calendar'></i>".html_safe+time_ago_in_words(tweet.created_at), tweet %>
+            </div>
+            <div class="flex-row">
+                <%= image_tag (tweet.user.avatar), class: "avatar-in-tweet" %>
+                <b class="new-text">@<%= tweet.user.username %></b><br />
+            </div>
+            <div>
+                <% if user_signed_in? && current_user != tweet.user %>
+                    <% if current_user.is_following?(tweet.user_id)%>
+                        <%= link_to "<i class='fas fa-users-slash'></i>".html_safe, users_follow_path(tweet.user_id), method: :post %>
+                    <% else %>
+                        <%= link_to "<i class='fas fa-user-friends'></i>".html_safe, users_follow_path(tweet.user_id), method: :post %>
+                    <% end %>
+                <% end %>
+            </div>
+        </div>
+
+        <div class="card-body content-color">
+            <p class="card-text"><i><%= tweet.content.html_safe %></i></p>
+        </div>
+
+        <div class="card-footer border-1 card-color">
+            <div class="d-inline">
+                <% if tweet.is_liked(current_user) %>
+                    <%= link_to "<i class='fas fa-heart text-danger'></i>".html_safe, tweet_likes_path(tweet), method: :post %>
+                <% else %>
+                    <%= link_to "<i class='far fa-heart'></i>".html_safe, tweet_likes_path(tweet), method: :post %>
+                <% end %>
+                <%= tweet.likes.count %> | ReTweets
+            </div>
+
+<div class="float-right">
+                <%= tweet.count_rt %>
+                <%= link_to "<i class='fas fa-retweet text-#{tweet.retweet_color}'></i>".html_safe, tweet_retweet_path(tweet), method: :post %>
+                
+                <% if tweet.is_retweet? %>
+                    <%= link_to "Retweet...", tweet.tweet_ref %>
+                <%end%>
+            </div>
+        </div>
+    </div>
+</div>
